@@ -1,0 +1,9 @@
+getSettings:
+  getAction: 2
+  getActionRepeat: 30
+  getScrollingRepeat: 4000
+  getScrollingLength: 9
+  getFindLines: 'Сетевая игра, Настройки, Выйти из игры'
+  getWindowNames: 'MineSweet.ru, Minecraft 1.6.4'
+  getActionHotkey: 0x75
+  getScrollingHotkey: 0x76
