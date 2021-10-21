@@ -440,7 +440,7 @@ public class Util {
 
     public static Updater.Version[] getVersions() {
         try {
-            Reader reader = new InputStreamReader(new BufferedInputStream(new URL("https://api.github.com/repos/MoonshineBucket/TickProfiler/releases").openStream()), "UTF-8");
+            Reader reader = new InputStreamReader(new BufferedInputStream(new URL("https://api.github.com/repos/MoonshineBucket/OCR/releases").openStream()), "UTF-8");
             Updater.Version[] versions = new Gson().fromJson(reader, Updater.Version[].class);
             System.out.printf("Founded remote repository versions: %s.%n", Arrays.toString(versions));
             reader.close();
