@@ -475,7 +475,7 @@ public class Util {
             }
         }
 
-        return !isCurrentVersion;
+        return isCurrentVersion;
     }
 
 }
