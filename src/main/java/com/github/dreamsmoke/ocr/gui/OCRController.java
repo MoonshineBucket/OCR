@@ -9,17 +9,10 @@ import com.github.dreamsmoke.ocr.util.io.IOUtil;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
 public class OCRController {
@@ -240,9 +233,9 @@ public class OCRController {
         });
 
         // приятности
-        link_developer.setOnMouseClicked(event -> viewURL("https://vk.com/moonshinebucket"));
-        link_support.setOnMouseClicked(event -> viewURL("https://vk.com/id248005111"));
-        link_lfg.setOnMouseClicked(event -> viewURL("https://discord.gg/f5BXKTBgDC"));
+        link_developer.setOnMouseClicked(event -> Util.viewURL("https://vk.com/moonshinebucket"));
+        link_support.setOnMouseClicked(event -> Util.viewURL("https://vk.com/id248005111"));
+        link_lfg.setOnMouseClicked(event -> Util.viewURL("https://discord.gg/f5BXKTBgDC"));
     }
 
     String listToString(List<String> stringList) {
@@ -280,16 +273,6 @@ public class OCRController {
 
             return null;
         }));
-    }
-
-    void viewURL(String string) {
-        if(Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-            try {
-                Desktop.getDesktop().browse(new URL(string).toURI());
-            } catch (IOException | URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }

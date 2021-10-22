@@ -50,9 +50,14 @@ public class UpdateController {
 
         confirm.setOnMouseClicked(event -> {
             try {
-                Notifications.notify("Началось обновление приложения, пожалуйста подождите...");
-
-                update();
+                boolean isJarFile = IOUtil.hasExtension(Util.BINARY_PATH, ".jar");
+                if(isJarFile) {
+                    Notifications.notify("Началось обновление приложения, пожалуйста подождите...");
+                    update();
+                } else {
+                    Util.viewURL(update.url);
+                    shutdown();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
 
@@ -72,29 +77,26 @@ public class UpdateController {
         ProcessBuilder builder = new ProcessBuilder(args.toArray(new String[args.size()]));
         builder.inheritIO();
 
-        boolean isJarFile = IOUtil.hasExtension(Util.BINARY_PATH, ".jar");
         for(Updater.Asset asset : update.remoteFiles) {
             System.out.println(asset.name);
 
-            if(isJarFile) {
-                if(!asset.name.endsWith(".jar")) {
-                    continue;
-                }
-            } else if(!asset.name.endsWith(".exe")) {
+            if(!asset.name.endsWith(".jar")) {
                 continue;
             }
 
             IOUtil.downloadFile(asset.browser_download_url, Util.C_BINARY_PATH);
             try (InputStream inputStream = IOUtil.newInput(Util.C_BINARY_PATH)) {
                 IOUtil.transfer(inputStream, Util.BINARY_PATH);
+            } finally {
+                Files.deleteIfExists(Util.C_BINARY_PATH);
             }
-
-            Files.deleteIfExists(Util.C_BINARY_PATH);
         }
 
         Notifications.notify("Приложение успешно обновлено, перезагружаем его!");
-        builder.start();
+        builder.start(); shutdown();
+    }
 
+    void shutdown() {
         // Kill current instance
         Runtime.getRuntime().exit(255);
         throw new AssertionError("Why OCR wasn't restarted?!");

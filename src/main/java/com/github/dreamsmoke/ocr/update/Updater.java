@@ -64,6 +64,7 @@ public class Updater extends Application {
             if(Util.canUpdate(strings, currentVersion)) {
                 currentVersion = strings;
 
+                update.url = version.html_url;
                 update.version = version.tag_name;
                 update.remoteFiles = version.assets;
                 update.description = version.body;
@@ -81,7 +82,7 @@ public class Updater extends Application {
     }
 
     public class Update {
-        public String version, description;
+        public String url, version, description;
         public Asset[] remoteFiles;
 
         public Update() {
