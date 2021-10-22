@@ -223,10 +223,12 @@ public class OCR {
                 try {
                     if(Settings.SCROLLING_ENABLE) {
                         if(++Settings.CURRENT_SLOT > Settings.SCROLLING_LENGTH) {
-                            Settings.CURRENT_SLOT = 1;
+                            Settings.CURRENT_SLOT = 0;
                         }
 
-                        Util.ROBOT.keyPress(KeyEvent.VK_0 + Settings.CURRENT_SLOT);
+                        int key = KeyEvent.VK_0 + Settings.CURRENT_SLOT;
+                        Util.ROBOT.keyPress(key);
+
                         TimeUnit.MILLISECONDS.sleep(Settings.SCROLLING_REPEAT);
                         continue;
                     }
