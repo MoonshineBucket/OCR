@@ -2,8 +2,10 @@ plugins {
     id 'java'
 }
 
+def ocrVersion = '1.0.1'
+
 group 'org.example'
-version '1.0.1'
+archivesBaseName = 'OCR'
 
 repositories {
     mavenCentral()
@@ -33,10 +35,10 @@ jar {
         attributes(
                 'Implementation-Vendor': 'DreamSmoke/MoonshineBucket',
                 'Implementation-Title': 'DreamSmoke/MoonshineBucket',
-                'Implementation-Version': 'OCR-' + project.version,
+                'Implementation-Version': 'OCR-' + ocrVersion,
                 'Specification-Vendor': 'DreamSmoke/MoonshineBucket',
                 'Specification-Title': 'OCR',
-                'Specification-Version': project.version + '-SNAPSHOT',
+                'Specification-Version': ocrVersion + '-SNAPSHOT',
                 'Main-Class': 'com.github.dreamsmoke.ocr.update.Updater'
         )
     }
