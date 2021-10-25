@@ -39,12 +39,18 @@ public interface User32 extends StdCallLibrary {
             return null;
         }
 
+        if(window.toString().equals(JNA.FOREGROUND_WINDOW)) {
+            return JNA.WINDOW_NAME;
+        }
+
+        JNA.FOREGROUND_WINDOW = window.toString();
         if(INSTANCE.IsWindowVisible(window)) {
             char[] buffer = new char[1024 * 2];
             INSTANCE.GetWindowTextW(window, buffer, 1024);
-            return Native.toString(buffer);
+            return JNA.WINDOW_NAME = Native.toString(buffer);
         }
 
+        JNA.WINDOW_NAME = "null";
         return null;
     }
 

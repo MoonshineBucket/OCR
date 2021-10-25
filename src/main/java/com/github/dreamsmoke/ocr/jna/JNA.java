@@ -37,6 +37,8 @@ public class JNA {
     public static KeyboardHook KEYBOARD_HOOK;
     public static MouseHook MOUSE_HOOK;
 
+    public static String FOREGROUND_WINDOW, WINDOW_NAME;
+
     public static void hook() {
         if(Platform.isWindows()) {
             hookKeyboard();
@@ -144,31 +146,63 @@ public class JNA {
         }, "JNAHook"));
     }
 
-    static final WinUser.INPUT[] CLICK;
+    static final WinUser.INPUT[] MOUSE_CLICK, KEYBOARD_CLICK;
 
     static {
-        CLICK = (WinUser.INPUT[]) new WinUser.INPUT().toArray(2);
+        // mouse clicks
+        MOUSE_CLICK = (WinUser.INPUT[]) new WinUser.INPUT().toArray(2);
 
         // down
-        CLICK[0].type = new WinDef.DWORD(WinUser.INPUT.INPUT_MOUSE);
-        CLICK[0].input.setType("mi");
-        CLICK[0].input.mi.dwFlags = new WinDef.DWORD(0x0002);
-        CLICK[0].input.mi.dwExtraInfo = new BaseTSD.ULONG_PTR(0);
-        CLICK[0].input.mi.time = new WinDef.DWORD(0);
-        CLICK[0].input.mi.mouseData = new WinDef.DWORD(0);
+        MOUSE_CLICK[0].type = new WinDef.DWORD(WinUser.INPUT.INPUT_MOUSE);
+        MOUSE_CLICK[0].input.setType("mi");
+        MOUSE_CLICK[0].input.mi.dwFlags = new WinDef.DWORD(0x0002);
+        MOUSE_CLICK[0].input.mi.dwExtraInfo = new BaseTSD.ULONG_PTR(0);
+        MOUSE_CLICK[0].input.mi.time = new WinDef.DWORD(0);
+        MOUSE_CLICK[0].input.mi.mouseData = new WinDef.DWORD(0);
 
         // up
-        CLICK[1].type = new WinDef.DWORD(WinUser.INPUT.INPUT_MOUSE);
-        CLICK[1].input.setType("mi");
-        CLICK[1].input.mi.dwFlags = new WinDef.DWORD(0x0004);
-        CLICK[1].input.mi.dwExtraInfo = new BaseTSD.ULONG_PTR(0);
-        CLICK[1].input.mi.time = new WinDef.DWORD(0);
-        CLICK[1].input.mi.mouseData = new WinDef.DWORD(0);
+        MOUSE_CLICK[1].type = new WinDef.DWORD(WinUser.INPUT.INPUT_MOUSE);
+        MOUSE_CLICK[1].input.setType("mi");
+        MOUSE_CLICK[1].input.mi.dwFlags = new WinDef.DWORD(0x0004);
+        MOUSE_CLICK[1].input.mi.dwExtraInfo = new BaseTSD.ULONG_PTR(0);
+        MOUSE_CLICK[1].input.mi.time = new WinDef.DWORD(0);
+        MOUSE_CLICK[1].input.mi.mouseData = new WinDef.DWORD(0);
+
+        // keyboard clicks
+        KEYBOARD_CLICK = (WinUser.INPUT[]) new WinUser.INPUT().toArray(2);
+
+        // down
+        KEYBOARD_CLICK[0].type = new WinDef.DWORD(WinUser.INPUT.INPUT_KEYBOARD);
+        KEYBOARD_CLICK[0].input.setType("ki");
+        KEYBOARD_CLICK[0].input.ki.dwFlags = new WinDef.DWORD(0);
+        KEYBOARD_CLICK[0].input.ki.dwExtraInfo = new BaseTSD.ULONG_PTR();
+        KEYBOARD_CLICK[0].input.ki.time = new WinDef.DWORD();
+        KEYBOARD_CLICK[0].input.ki.wScan = new WinDef.WORD();
+
+        // up
+        KEYBOARD_CLICK[1].type = new WinDef.DWORD(WinUser.INPUT.INPUT_KEYBOARD);
+        KEYBOARD_CLICK[1].input.setType("ki");
+        KEYBOARD_CLICK[1].input.ki.dwFlags = new WinDef.DWORD(2);
+        KEYBOARD_CLICK[1].input.ki.dwExtraInfo = new BaseTSD.ULONG_PTR();
+        KEYBOARD_CLICK[1].input.ki.time = new WinDef.DWORD();
+        KEYBOARD_CLICK[1].input.ki.wScan = new WinDef.WORD();
     }
 
     // вызываем клик мыши нативно
     public static void nativeMouseClick() {
-        User32.INSTANCE.SendInput(new WinDef.DWORD(2), CLICK, CLICK[0].size());
+        User32.INSTANCE.SendInput(new WinDef.DWORD(2), MOUSE_CLICK, MOUSE_CLICK[0].size());
+    }
+
+    // вызываем нажатие клавиши нативно
+    public static void nativeKeyboardPress(int keyCode) {
+        KEYBOARD_CLICK[0].input.ki.wVk = new WinDef.WORD(keyCode);
+        User32.INSTANCE.SendInput(new WinDef.DWORD(1), KEYBOARD_CLICK, KEYBOARD_CLICK[0].size());
+    }
+
+    // вызываем отжатие клавиши нативно
+    public static void nativeKeyboardRelease(int keyCode) {
+        KEYBOARD_CLICK[1].input.ki.wVk = new WinDef.WORD(keyCode);
+        User32.INSTANCE.SendInput(new WinDef.DWORD(1), KEYBOARD_CLICK, KEYBOARD_CLICK[1].size());
     }
 
     // хук клавиатуры

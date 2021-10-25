@@ -92,17 +92,14 @@ public class OCR {
                                     rect.left, rect.top, rect.right, rect.bottom);*/
 
                             // создаем скриншот
-                            //long startTime = System.currentTimeMillis();
+                            long startTime = System.currentTimeMillis();
                             BufferedImage screenCapture = Util.ROBOT.createScreenCapture(rectangle);
-                            //System.out.printf("screen: %s.%n", System.currentTimeMillis() - startTime);
 
                             // переводим в черно-белое полотно
-                            //startTime = System.currentTimeMillis();
-                            java.util.List<Location> locationList = Util.blackAndWhiteCoordinateList(screenCapture);
-                            //System.out.printf("black-white: %s.%n", System.currentTimeMillis() - startTime);
+                            List<Location> locationList = Util.blackAndWhiteCoordinateList(screenCapture);
+                            //int cache = locationList.hashCode();
 
-                            //int cache = locationList.size();
-                            java.util.List<GameLine> gameLineList;
+                            List<GameLine> gameLineList;
                             //if (Util.CACHED_SCREEN_MAP.containsKey(cache)) {
                                 // достаем из кеша, потому что можно
                                 //gameLineList = Util.CACHED_SCREEN_MAP.get(cache);
@@ -139,6 +136,15 @@ public class OCR {
                             // выполняем плагины
                             JSPlugin.INSTANCE.runPlugins("run", gameLineList);
                             gameLineList.clear();
+
+                            // обработка снимка должна выполняться минимум раз в 5 секунд
+                            long processingTime = System.currentTimeMillis() - startTime;
+                            if(processingTime < 5000L) {
+                                TimeUnit.MILLISECONDS.sleep(5000L - processingTime);
+                            }
+                        } else {
+                            // уменьшено количество попыток поиска активного окна
+                            TimeUnit.SECONDS.sleep(1L);
                         }
 
                         continue;
@@ -227,7 +233,9 @@ public class OCR {
                         }
 
                         int key = KeyEvent.VK_0 + Settings.CURRENT_SLOT;
+
                         Util.ROBOT.keyPress(key);
+                        Util.ROBOT.keyRelease(key);
 
                         TimeUnit.MILLISECONDS.sleep(Settings.SCROLLING_REPEAT);
                         continue;

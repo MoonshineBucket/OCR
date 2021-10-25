@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-def ocrVersion = '1.0.1'
+def ocrVersion = '1.0.2'
 
 group 'org.example'
 archivesBaseName = 'OCR'

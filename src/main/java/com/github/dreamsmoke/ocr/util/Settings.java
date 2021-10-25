@@ -1,13 +1,12 @@
 package com.github.dreamsmoke.ocr.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Settings {
 
-    public static final List<String> FIND_GAME_LINE_LIST = Collections.synchronizedList(new ArrayList<>()),
-            WINDOW_NAME_LIST = Collections.synchronizedList(new ArrayList<>());
+    public static final List<String> FIND_GAME_LINE_LIST = new ArrayList<>(),
+            WINDOW_NAME_LIST = new ArrayList<>();
 
     public static int WIDTH, HEIGHT;
 
